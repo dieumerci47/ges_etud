@@ -1,0 +1,16 @@
+# Outils / IDE
+.qodo/
+.idea/
+*.iml
+
+# Flutter / Dart
+**/.dart_tool/
+**/build/
+**/.flutter-plugins-dependencies
+**/.pub/
+**/.pub-cache/
+**/coverage/
+
+# OS
+.DS_Store
+Thumbs.db
