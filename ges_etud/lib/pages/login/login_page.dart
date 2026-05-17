@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ges_etud/aimation/delayed_animtion.dart';
 import 'package:ges_etud/main.dart';
 import 'package:ges_etud/pages/home_page.dart';
+import 'package:ges_etud/provider/admin_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
@@ -96,11 +99,44 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.only(top: 20),
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyHomePage()),
-                        );
+                      onPressed: () async {
+                        // print("pressed");
+
+                        if (_formKey.currentState!.validate()) {
+                          await adminProvider.logAdmin(
+                            _emailController.text,
+                            _passwordController.text,
+                          );
+                          // print("test   ${adminProvider.admin}");
+                          if (adminProvider.admin.isNotEmpty) {
+                            // print(adminProvider.admin);
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyHomePage(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                content: Text(
+                                  "Email ou mot de passe incorrect",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.all(20),
