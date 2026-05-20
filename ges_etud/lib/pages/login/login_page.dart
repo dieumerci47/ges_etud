@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // print("pressed");
+                        print("pressed");
 
                         if (_formKey.currentState!.validate()) {
                           await adminProvider.logAdmin(

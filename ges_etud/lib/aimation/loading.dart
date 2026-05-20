@@ -18,6 +18,7 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   final dio = Dio();
+  // final String ip = "192.168.1.9s4:3001";
   final String ip = "192.168.100.254:3001";
   @override
   void initState() {
@@ -51,14 +52,30 @@ class _LoadingPageState extends State<LoadingPage> {
             );
           }
         } on DioException catch (e) {
-          if (e.response!.statusCode == 401) {
+          if (e.response?.statusCode == 401) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const LoginPage()),
             );
-          } /* else {
-            
-          } */
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                content: Text(
+                  "Vérrifier votre connexion",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            );
+          }
         }
         /*  Navigator.pushReplacement(
           context,

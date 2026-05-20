@@ -20,7 +20,11 @@ const app = express();
 const PORT = process.env.PORT;
 const IP = process.env.IP;
 
-app.use(cors());
+app.use(cors({
+  origin: true,       // Autorise la requête (permet le set-cookie)
+  credentials: true,    // TRÈS important pour les cookies
+}));
+
 app.use(express.json());
 app.use(cookieParser())
 

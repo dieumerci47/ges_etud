@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 module.exports.authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]; // "Bearer xxx" → "xxx"
-  if (!token) return res.status(401).json({ error: 'Non autorisé' });
+  if (!token) return res.status(401).json({ error: 'Pas de token' });
   
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

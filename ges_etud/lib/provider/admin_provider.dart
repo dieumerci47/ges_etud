@@ -10,6 +10,7 @@ class AdminProvider with ChangeNotifier {
   Map _adminInfos = {};
   Map get adminInfos => _adminInfos;
   final dio = Dio();
+  // final String ip = "192.168.1.94:3001";
   final String ip = "192.168.100.254:3001";
 
   Future logAdmin(String email, String password) async {

@@ -2,7 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ges_etud/main.dart';
+import 'package:ges_etud/pages/add.dart';
+import 'package:ges_etud/pages/detail.dart';
+// import 'package:ges_etud/pages/fiche_detail.dart';
 import 'package:ges_etud/pages/login/login_page.dart';
+import 'package:ges_etud/pages/stats_page.dart';
 import 'package:ges_etud/provider/admin_provider.dart';
 import 'package:ges_etud/provider/etudiant_provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -21,10 +25,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     final admin = Provider.of<AdminProvider>(context, listen: false);
-    final etudiant = Provider.of<EtudiantProvider>(context, listen: false);
+    final etudiants = Provider.of<EtudiantProvider>(context, listen: false);
     Future futureAdmin = admin
         .getInfosAdmin(); // ← lancer la requête UNE SEULE FOIS
-    Future futureEtudiants = etudiant.getDashboard();
+    Future futureEtudiants = etudiants.getDashboard();
     // await admin.getInfosAdmin();
 
     _combineFuture = Future.wait([futureAdmin, futureEtudiants]);
@@ -33,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final admin = Provider.of<AdminProvider>(context, listen: false);
-    final etudiant = Provider.of<EtudiantProvider>(context, listen: false);
+    final etudiants = Provider.of<EtudiantProvider>(context, listen: false);
 
     return Scaffold(
       /*  appBar: AppBar(
@@ -67,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // État 3 : Données reçues → afficher les infos admin
           final adminInfos =
               admin.adminInfos; // ← maintenant les données sont là !
-          final tableauDash = etudiant.tableauDashboard;
+          final tableauDash = etudiants.tableauDashboard;
           // print(tableauDash);
           return SingleChildScrollView(
             // padding: EdgeInsets.all(20),
@@ -80,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 // Text(adminInfos['first_name'] ?? ''),
                 // Text(adminInfos['email'] ?? ''),
-                _actions(),
+                _actions(context),
                 _recent(tableauDash["recents_etudiants"]),
               ],
             ),
@@ -99,9 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _headers(AdminProvider admin, int nbreEtudiants, int mois) {
     return Container(
       // padding: EdgeInsets.all(20),
-      padding: EdgeInsets.only(right: 20, left: 20, bottom: 20, top: 50),
+      padding: EdgeInsets.only(right: 20, left: 20, bottom: 20, top: 30),
       // margin: EdgeInsets.only(bottom: 0),
-      height: 250,
+      height: 270,
       // width: double.infinity,
       color: d_blue,
       child: Column(
@@ -116,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     "Bienvenue",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.5),
-                      fontSize: 22,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -124,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     "${admin.adminInfos['prenom'] + " " + "${admin.adminInfos['nom']}" ?? ""}",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 23,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -215,7 +219,7 @@ Widget _cardHeader({required int nbre, required String label}) {
   );
 }
 
-Widget _actions() {
+Widget _actions(BuildContext context) {
   return Container(
     // padding: EdgeInsets.only(right: 40, left: 40, top: 20),
     padding: EdgeInsets.all(20),
@@ -239,7 +243,11 @@ Widget _actions() {
               label: "Ajouter",
               color: Color(0xFFE3F2FD), // Bleu clair
               onTap: () {
-                print("Clic sur Ajouter");
+                // print("Clic sur Ajouter");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddPage()),
+                );
                 // Navigator.push(...) ou action ici
               },
             ),
@@ -270,7 +278,11 @@ Widget _actions() {
               label: "Stats",
               color: Color(0xFFF3E5F5), // Violet clair
               onTap: () {
-                print("Clic sur Stats");
+                // print("Clic sur Stats");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StatsPage()),
+                );
               },
             ),
           ],
@@ -287,6 +299,7 @@ Widget _buildCard({
   required VoidCallback onTap,
 }) {
   return InkWell(
+    onTap: onTap,
     child: Container(
       decoration: BoxDecoration(
         // color: Colors.black.withOpacity(0.15),
@@ -347,7 +360,13 @@ Widget _recent(List etudiants) {
               minTileHeight: 10, */
               contentPadding: EdgeInsets.all(-0),
               onTap: () {
-                print(etudiants[index]['nom_complet']);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DetailPage(id: etudiants[index]["id"]),
+                  ),
+                );
               },
               shape: Border(bottom: BorderSide(color: d_blue, width: 0.3)),
               titleAlignment: ListTileTitleAlignment.center,

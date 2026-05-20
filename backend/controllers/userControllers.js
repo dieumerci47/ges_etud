@@ -11,7 +11,10 @@ let CreateToken = (id) => {
 module.exports.getAdmin = async (req, res) => {
     try{
      const { email, password } = req.body;
-        const data = await pool.query('SELECT * FROM admin WHERE email = ? AND password = ?', [email, password]);
+    //  console.log(req.body);
+    
+    const data = await pool.query('SELECT * FROM admin WHERE email = ? AND password = ?', [email, password]);
+    //  console.log(data[0]);
         if (data[0].length === 0) {
             console.log("admin not found");
             return res.status(404).json({ error: 'admin not found' });
